@@ -5,6 +5,7 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <UserSecretsId>5ce8a104-5f31-4a29-a6b8-91adef761147</UserSecretsId>
     </PropertyGroup>
 
     <ItemGroup>
@@ -12,14 +13,27 @@
     </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Include="EFCore.NamingConventions" Version="7.0.2" />
         <PackageReference Include="Grpc.AspNetCore" Version="2.49.0" />
         <PackageReference Include="Grpc.AspNetCore.Server.Reflection" Version="2.52.0" />
+        <PackageReference Include="Microsoft.Azure.AppConfiguration.AspNetCore" Version="6.0.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.5">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.FeatureManagement.AspNetCore" Version="2.5.1" />
     </ItemGroup>
 
     <ItemGroup>
       <Content Include="..\..\.dockerignore">
         <Link>.dockerignore</Link>
       </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Meteor.Sessions.Core\Meteor.Sessions.Core.csproj" />
+      <ProjectReference Include="..\Meteor.Sessions.Infrastructure\Meteor.Sessions.Infrastructure.csproj" />
+      <ProjectReference Include="..\Meteor.Sessions.Migrations\Meteor.Sessions.Migrations.csproj" />
     </ItemGroup>
 
 </Project>
