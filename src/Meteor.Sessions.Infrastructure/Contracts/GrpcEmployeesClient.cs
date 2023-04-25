@@ -17,6 +17,24 @@ public class GrpcEmployeesClient : IEmployeesClient
         _mapper = mapper;
     }
 
+    public async Task<Core.Models.Employee?> GetEmployeeAsync(int customerId, int employeeId)
+    {
+        try
+        {
+            var request = new GetEmployeeByIdRequest()
+            {
+                Id = employeeId,
+            };
+            var metadata = GetCustomerIdMetadata(customerId);
+            var employee = await _grpcClient.GetEmployeeByIdAsync(request, metadata);
+            return _mapper.Map<Core.Models.Employee>(employee);
+        }
+        catch (RpcException e) when (e.StatusCode == StatusCode.NotFound)
+        {
+            return null;
+        }
+    }
+
     public async Task<Core.Models.Employee?> GetEmployeeAsync(int customerId, string emailAddress)
     {
         try
