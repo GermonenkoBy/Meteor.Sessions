@@ -1,18 +1,26 @@
 ﻿FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS base
+
+EXPOSE 3000
+EXPOSE 3001
+ENV ASPNETCORE_URLS="http://+:3000;http://+:3001"
+
+RUN apt-get -y update; apt-get -y install curl
+
 WORKDIR /app
-EXPOSE 80
-EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
+ARG NUGET_USER
+ARG NUGET_PASSWORD
+
 WORKDIR /src
-COPY ["src/Meteor.Sessions.Api/Meteor.Sessions.Api.csproj", "src/Meteor.Sessions.Api/"]
-RUN dotnet restore "src/Meteor.Sessions.Api/Meteor.Sessions.Api.csproj"
-COPY . .
-WORKDIR "/src/src/Meteor.Sessions.Api"
+COPY ["/src/.", "."]
+
+WORKDIR "/src/Meteor.Sessions.Api"
+RUN dotnet nuget add source "https://nuget.pkg.github.com/GermonenkoBy/index.json" -u $NUGET_USER -p $NUGET_PASSWORD --store-password-in-clear-text
 RUN dotnet build "Meteor.Sessions.Api.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "Meteor.Sessions.Api.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "Meteor.Sessions.Api.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app

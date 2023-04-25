@@ -4,6 +4,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{8EC83FBE-113
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Meteor.Sessions.Api", "src\Meteor.Sessions.Api\Meteor.Sessions.Api.csproj", "{4BAAA451-7EDF-4CE9-AE6E-1A34C47F5783}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Meteor.Sessions.Core", "src\Meteor.Sessions.Core\Meteor.Sessions.Core.csproj", "{48BFC23A-8DFA-46B2-9C08-DA2AC374BC5E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Meteor.Sessions.Migrations", "src\Meteor.Sessions.Migrations\Meteor.Sessions.Migrations.csproj", "{F1CE0AAF-F7C7-402D-842A-595AD3F51D56}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Meteor.Sessions.Infrastructure", "src\Meteor.Sessions.Infrastructure\Meteor.Sessions.Infrastructure.csproj", "{00859096-0AFD-4308-BDB7-E84B6E695828}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -11,11 +17,26 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{4BAAA451-7EDF-4CE9-AE6E-1A34C47F5783} = {8EC83FBE-1130-49CA-A5ED-B843A8E9B82D}
+		{48BFC23A-8DFA-46B2-9C08-DA2AC374BC5E} = {8EC83FBE-1130-49CA-A5ED-B843A8E9B82D}
+		{F1CE0AAF-F7C7-402D-842A-595AD3F51D56} = {8EC83FBE-1130-49CA-A5ED-B843A8E9B82D}
+		{00859096-0AFD-4308-BDB7-E84B6E695828} = {8EC83FBE-1130-49CA-A5ED-B843A8E9B82D}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{4BAAA451-7EDF-4CE9-AE6E-1A34C47F5783}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4BAAA451-7EDF-4CE9-AE6E-1A34C47F5783}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4BAAA451-7EDF-4CE9-AE6E-1A34C47F5783}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4BAAA451-7EDF-4CE9-AE6E-1A34C47F5783}.Release|Any CPU.Build.0 = Release|Any CPU
+		{48BFC23A-8DFA-46B2-9C08-DA2AC374BC5E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{48BFC23A-8DFA-46B2-9C08-DA2AC374BC5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{48BFC23A-8DFA-46B2-9C08-DA2AC374BC5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{48BFC23A-8DFA-46B2-9C08-DA2AC374BC5E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F1CE0AAF-F7C7-402D-842A-595AD3F51D56}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F1CE0AAF-F7C7-402D-842A-595AD3F51D56}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F1CE0AAF-F7C7-402D-842A-595AD3F51D56}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F1CE0AAF-F7C7-402D-842A-595AD3F51D56}.Release|Any CPU.Build.0 = Release|Any CPU
+		{00859096-0AFD-4308-BDB7-E84B6E695828}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{00859096-0AFD-4308-BDB7-E84B6E695828}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{00859096-0AFD-4308-BDB7-E84B6E695828}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{00859096-0AFD-4308-BDB7-E84B6E695828}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
