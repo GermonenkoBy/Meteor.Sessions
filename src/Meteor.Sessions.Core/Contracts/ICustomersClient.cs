@@ -4,6 +4,8 @@ namespace Meteor.Sessions.Core.Contracts;
 
 public interface ICustomersClient
 {
+    Task<Customer?> GetCustomerAsync(int customerId);
+
     Task<Customer?> GetCustomerAsync(string domain);
 
     Task<CustomerSettings?> GetCustomerSettingsAsync(int customerId);

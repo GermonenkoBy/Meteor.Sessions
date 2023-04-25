@@ -17,11 +17,24 @@ public class GrpcCustomersClient: ICustomersClient
         _mapper = mapper;
     }
 
+    public async Task<Core.Models.Customer?> GetCustomerAsync(int customerId)
+    {
+        try
+        {
+            var customer = await _grpcClient.GetCustomerByIdAsync(new() { CustomerId = customerId });
+            return _mapper.Map<Core.Models.Customer>(customer);
+        }
+        catch (RpcException e) when(e.StatusCode == StatusCode.NotFound)
+        {
+            return null;
+        }
+    }
+
     public async Task<Core.Models.Customer?> GetCustomerAsync(string domain)
     {
         try
         {
-            var customer = await _grpcClient.GetCustomerAsync(new() { Domain = domain });
+            var customer = await _grpcClient.GetCustomerByDomainAsync(new() { Domain = domain });
             return _mapper.Map<Core.Models.Customer>(customer);
         }
         catch (RpcException e) when(e.StatusCode == StatusCode.NotFound)

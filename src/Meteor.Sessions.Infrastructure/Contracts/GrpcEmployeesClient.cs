@@ -1,4 +1,5 @@
-﻿using MapsterMapper;
+﻿using Grpc.Core;
+using MapsterMapper;
 using Meteor.Sessions.Core.Contracts;
 using Meteor.Sessions.Infrastructure.Grpc;
 
@@ -18,11 +19,39 @@ public class GrpcEmployeesClient : IEmployeesClient
 
     public async Task<Core.Models.Employee?> GetEmployeeAsync(int customerId, string emailAddress)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var request = new GetEmployeeByEmailRequest
+            {
+                EmailAddress = emailAddress,
+            };
+            var metadata = GetCustomerIdMetadata(customerId);
+            var employee = await _grpcClient.GetEmployeeByEmailAsync(request, metadata);
+            return _mapper.Map<Core.Models.Employee>(employee);
+        }
+        catch (RpcException e) when (e.StatusCode == StatusCode.NotFound)
+        {
+            return null;
+        }
     }
 
-    public Task<bool> VerifyPasswordAsync(int customerId, int employeeId, string password)
+    public async Task<bool> VerifyPasswordAsync(int customerId, int employeeId, string password)
     {
-        throw new NotImplementedException();
+        var request = new ValidatePasswordRequest
+        {
+            EmployeeId = employeeId,
+            Password = password,
+        };
+        var metadata = GetCustomerIdMetadata(customerId);
+        var response = await _grpcClient.ValidatePasswordAsync(request, metadata);
+        return response.Valid;
+    }
+
+    private static Metadata GetCustomerIdMetadata(int customerId)
+    {
+        return new Metadata
+        {
+            { "Meteor-Customer-Id", customerId.ToString() }
+        };
     }
 }
