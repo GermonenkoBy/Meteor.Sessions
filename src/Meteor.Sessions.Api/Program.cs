@@ -1,6 +1,15 @@
+using Grpc.Core;
+using Mapster;
+using MapsterMapper;
 using Meteor.Sessions.Api.HealthChecks;
 using Meteor.Sessions.Api.Jobs;
+using Meteor.Sessions.Api.Services;
 using Meteor.Sessions.Core;
+using Meteor.Sessions.Core.Contracts;
+using Meteor.Sessions.Core.Services;
+using Meteor.Sessions.Core.Services.Contracts;
+using Meteor.Sessions.Infrastructure.Contracts;
+using Meteor.Sessions.Infrastructure.Grpc;
 using Meteor.Sessions.Infrastructure.Services;
 using Meteor.Sessions.Infrastructure.Services.Contracts;
 using Microsoft.EntityFrameworkCore;
@@ -24,10 +33,31 @@ if (!string.IsNullOrEmpty(azureAppConfigurationConnectionString))
     );
 }
 
+builder.Services.Configure<Meteor.Sessions.Core.Options.SessionsOptions>(
+    builder.Configuration.GetSection("Settings:Sessions")
+);
 builder.Services.AddFeatureManagement();
 
 builder.Services.AddGrpc();
 builder.Services.AddGrpcReflection();
+builder.Services.AddGrpcClient<CustomersService.CustomersServiceClient>(options =>
+{
+    var url = builder.Configuration.GetValue<string>("Routing:ControllerUrl") ?? string.Empty;
+    options.Address = new Uri(url);
+    if (options.Address.Scheme.Equals("http", StringComparison.OrdinalIgnoreCase))
+    {
+        options.ChannelOptionsActions.Add(opt => opt.Credentials = ChannelCredentials.Insecure);
+    }
+});
+builder.Services.AddGrpcClient<EmployeesService.EmployeesServiceClient>(options =>
+{
+    var url = builder.Configuration.GetValue<string>("Routing:EmployeesServiceUrl") ?? string.Empty;
+    options.Address = new Uri(url);
+    if (options.Address.Scheme.Equals("http", StringComparison.OrdinalIgnoreCase))
+    {
+        options.ChannelOptionsActions.Add(opt => opt.Credentials = ChannelCredentials.Insecure);
+    }
+});
 
 var sessionsConnectionString = builder.Configuration.GetConnectionString("Sessions");
 builder.Services.AddDbContext<SessionsContext>(
@@ -37,7 +67,17 @@ builder.Services.AddDbContext<SessionsContext>(
         .EnableSensitiveDataLogging(builder.Environment.IsDevelopment())
 );
 
+builder.Services.AddScoped<ISessionsService, SessionsService>();
+builder.Services.AddScoped<ICustomersClient, GrpcCustomersClient>();
+builder.Services.AddScoped<IEmployeesClient, GrpcEmployeesClient>();
+builder.Services.AddScoped<IRefreshTokenGenerator, RefreshTokenGenerator>();
 builder.Services.AddScoped<IMigrationsRunner, MigrationsRunner>();
+
+var mapperConfig = new TypeAdapterConfig();
+mapperConfig.Apply(new Meteor.Sessions.Api.Mapping.MappingRegister());
+mapperConfig.Apply(new Meteor.Sessions.Infrastructure.Mapping.MappingRegister());
+builder.Services.AddSingleton<IMapper>(new Mapper(mapperConfig));
+
 builder.Services.AddSingleton<MigrationsHealthcheck>();
 
 builder.Services.AddHostedService<MigrationsJob>();
@@ -57,4 +97,5 @@ app.MapHealthChecks("health/migrations", new()
 });
 
 app.MapGrpcReflectionService();
+app.MapGrpcService<SessionsGrpcService>();
 app.Run();

@@ -10,4 +10,19 @@
       <ProjectReference Include="..\Meteor.Sessions.Core\Meteor.Sessions.Core.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Google.Protobuf" Version="3.22.3" />
+      <PackageReference Include="Grpc.Core" Version="2.46.6" />
+      <PackageReference Include="Grpc.Tools" Version="2.54.0">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
+      <PackageReference Include="Mapster" Version="7.3.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Protobuf Include="Protos\customers.proto" GrpcServices="Client" />
+        <Protobuf Include="Protos\employees.proto" GrpcServices="Client" />
+    </ItemGroup>
+
 </Project>
