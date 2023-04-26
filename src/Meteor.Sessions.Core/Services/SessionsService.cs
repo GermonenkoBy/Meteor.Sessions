@@ -78,8 +78,10 @@ public class SessionsService : ISessionsService
             session = new()
             {
                 Id = Guid.NewGuid(),
-                CreateDate = now,
+                CustomerId = customer.Id,
+                EmployeeId = employee.Id,
                 IpAddress = sessionDto.IpAddress,
+                CreateDate = now,
             };
             _context.Sessions.Add(session);
         }
@@ -93,6 +95,17 @@ public class SessionsService : ISessionsService
         return session;
     }
 
+    public async Task<Session> RefreshTokenAsync(Guid id)
+    {
+        var session = await _context.Sessions.FirstOrDefaultAsync(s => s.Id == id);
+        if (session is null)
+        {
+            throw new MeteorNotFoundException("Session not found.");
+        }
+
+        return await RefreshTokenAsync(session);
+    }
+
     public async Task<Session> RefreshTokenAsync(string token)
     {
         var session = await _context.Sessions.FirstOrDefaultAsync(s => s.Token == token);
@@ -101,9 +114,14 @@ public class SessionsService : ISessionsService
             throw new MeteorNotFoundException("Token is invalid or a relation session is expired.");
         }
 
+        return await RefreshTokenAsync(session);
+    }
+
+    private async Task<Session> RefreshTokenAsync(Session session)
+    {
         if (session.ExpireDate < DateTimeOffset.UtcNow)
         {
-            throw new MeteorNotFoundException("Session is expired.");
+            throw new MeteorException("Session is expired.");
         }
 
         var customer = await _customersClient.GetCustomerAsync(session.CustomerId);

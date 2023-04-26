@@ -3,6 +3,7 @@ using Mapster;
 using MapsterMapper;
 using Meteor.Sessions.Api.HealthChecks;
 using Meteor.Sessions.Api.Jobs;
+using Meteor.Sessions.Api.Services;
 using Meteor.Sessions.Core;
 using Meteor.Sessions.Core.Contracts;
 using Meteor.Sessions.Core.Services;
@@ -32,6 +33,9 @@ if (!string.IsNullOrEmpty(azureAppConfigurationConnectionString))
     );
 }
 
+builder.Services.Configure<Meteor.Sessions.Core.Options.SessionsOptions>(
+    builder.Configuration.GetSection("Settings:Sessions")
+);
 builder.Services.AddFeatureManagement();
 
 builder.Services.AddGrpc();
@@ -70,6 +74,7 @@ builder.Services.AddScoped<IRefreshTokenGenerator, RefreshTokenGenerator>();
 builder.Services.AddScoped<IMigrationsRunner, MigrationsRunner>();
 
 var mapperConfig = new TypeAdapterConfig();
+mapperConfig.Apply(new Meteor.Sessions.Api.Mapping.MappingRegister());
 mapperConfig.Apply(new Meteor.Sessions.Infrastructure.Mapping.MappingRegister());
 builder.Services.AddSingleton<IMapper>(new Mapper(mapperConfig));
 
@@ -92,4 +97,5 @@ app.MapHealthChecks("health/migrations", new()
 });
 
 app.MapGrpcReflectionService();
+app.MapGrpcService<SessionsGrpcService>();
 app.Run();

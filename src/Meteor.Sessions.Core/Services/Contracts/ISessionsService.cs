@@ -7,6 +7,8 @@ public interface ISessionsService
 {
     Task<Session> StartSessionAsync(StartSessionDto sessionDto);
 
+    Task<Session> RefreshTokenAsync(Guid id);
+
     Task<Session> RefreshTokenAsync(string token);
 
     Task TerminateSessionAsync(string token);
