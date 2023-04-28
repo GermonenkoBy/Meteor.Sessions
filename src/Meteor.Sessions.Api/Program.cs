@@ -2,6 +2,7 @@ using Grpc.Core;
 using Mapster;
 using MapsterMapper;
 using Meteor.Sessions.Api.HealthChecks;
+using Meteor.Sessions.Api.Interceptors;
 using Meteor.Sessions.Api.Jobs;
 using Meteor.Sessions.Api.Services;
 using Meteor.Sessions.Core;
@@ -38,7 +39,7 @@ builder.Services.Configure<Meteor.Sessions.Core.Options.SessionsOptions>(
 );
 builder.Services.AddFeatureManagement();
 
-builder.Services.AddGrpc();
+builder.Services.AddGrpc(options => options.Interceptors.Add<ExceptionsHandlingInterceptor>());
 builder.Services.AddGrpcReflection();
 builder.Services.AddGrpcClient<CustomersService.CustomersServiceClient>(options =>
 {
